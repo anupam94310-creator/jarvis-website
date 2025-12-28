@@ -2,17 +2,125 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Hero JARVIS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First Website</title>
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .box {
+            background: rgba(0,0,0,0.4);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            min-height: 40px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            background: #00c6ff;
+            color: black;
+        }
+
+        button:hover {
+            background: #00a8cc;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Welcome to My Website</h1>
-        <p>This website will become my JARVIS AI in future.</p>
-        <button>Start</button>
-    </div>
+<div class="box">
+    <h1>🤖 Hero JARVIS</h1>
+    <p id="status">Click the button and speak</p>
+    <button onclick="startListening()">🎤 Talk to Jarvis</button>
+</div>
+
+<script>
+    const statusText = document.getElementById("status");
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-US";
+    recognition.interimResults = false;
+
+    function speak(text) {
+        const speech = new SpeechSynthesisUtterance(text);
+        speech.lang = "en-US";
+        window.speechSynthesis.speak(speech);
+    }
+
+    function startListening() {
+        statusText.innerText = "Listening...";
+        recognition.start();
+    }
+
+    recognition.onresult = function(event) {
+        const command = event.results[0][0].transcript.toLowerCase();
+        statusText.innerText = "You said: " + command;
+
+        jarvisReply(command);
+    };
+
+    recognition.onerror = function() {
+        statusText.innerText = "Mic error. Try again.";
+    };
+
+    function jarvisReply(command) {
+        let reply = "";
+
+        if (command.includes("hello")) {
+            reply = "Hello Anupam, I am your Jarvis.";
+        }
+        else if (command.includes("time")) {
+            reply = "The time is " + new Date().toLocaleTimeString();
+        }
+        else if (command.includes("date")) {
+            reply = "Today's date is " + new Date().toDateString();
+        }
+        else if (command.includes("your name")) {
+            reply = "My name is Hero Jarvis.";
+        }
+        else if (command.includes("open youtube")) {
+            reply = "Opening YouTube";
+            window.open("https://youtube.com", "_blank");
+        }
+        else if (command.includes("open google")) {
+            reply = "Opening Google";
+            window.open("https://google.com", "_blank");
+        }
+        else {
+            reply = "Sorry, I am learning. Please try another command.";
+        }
+
+        statusText.innerText = reply;
+        speak(reply);
+    }
+</script>
 
 </body>
 </html>
